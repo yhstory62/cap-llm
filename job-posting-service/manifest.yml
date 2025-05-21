@@ -1,0 +1,10 @@
+---
+applications:
+  - name: cap-ai-llm
+    memory: 512M
+    path: .
+    services:
+      - ai-auth
+      - ai-llm-db  
+      - ai-core
+

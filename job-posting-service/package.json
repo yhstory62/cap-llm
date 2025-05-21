@@ -1,14 +1,14 @@
 {
-  "name": "cap-llm",
+  "name": "cap-ai-llm",
   "version": "1.0.0",
   "description": "A SAP Cloud Application Programming Model & AI example using the SAP Cloud SDK for AI.",
-  "repository": "https://github.com/SAP-samples/codejam-cap-llm.git",
+  "repository": "https://github.com/yhstory62/cap-llm.git",
   "license": "UNLICENSED",
   "private": false,
   "type": "module",
   "dependencies": {
-    "@cap-js/hana": "^1",
-    "@langchain/community": "^0.3.39",
+    "@cap-js/hana": "^1.9.0",
+    "@langchain/community": "^0.3.43",
     "@langchain/textsplitters": "0.1.0",
     "@sap-ai-sdk/langchain": "1.10.0",
     "@sap-ai-sdk/orchestration": "1.10.0",
@@ -31,6 +31,7 @@
       "native_hana_associations": false
     },
     "requires": {
+      "authentication": "xsuaa",
       "[hybrid]": {
         "db": "hana"
       }
