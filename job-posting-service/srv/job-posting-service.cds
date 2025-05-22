@@ -8,6 +8,7 @@ service JobPostingService {
         };
 
     entity JobPostings    as projection on db.JobPostings;
+    
     function createVectorEmbeddings()               returns String;
     function deleteVectorEmbeddings()               returns String;
     // 구인공고 생성 user_query : 채팅 모델에 대한 사용자 입력을 나타내는 매개변수로 성공 또는 오류 문자열 메시지를 반환

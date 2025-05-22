@@ -124,4 +124,4 @@ async function orchestrateJobPostingCreation(user_query) {
     }
 }
 
-export { createVectorEmbeddings};
+export { createVectorEmbeddings, orchestrateJobPostingCreation};
