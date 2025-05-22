@@ -17,7 +17,7 @@ import path from 'path';
 
 async function createVectorEmbeddings() {
     try {
-        const loader = new TextLoader(path.resolve('db/data/demo_grounding.txt'));
+        const loader = new TextLoader(path.resolve('db/data/demo_biztechi.txt'));
         const document = await loader.load();
 
         // 문서 내의 텍스트를 지정된 크기로 분할
