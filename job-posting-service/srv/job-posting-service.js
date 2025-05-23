@@ -43,6 +43,16 @@ export default function () {
     this.on('deleteJobPostings', async () => {
         return await DBUtils.deleteJobPostings();
     });
+
+    this.on('createChat', async (req) => {
+        // 사용자 쿼리 전달
+        const user_query = req.data.user_query;
+        validateInputParameter(user_query);
+        
+        // 오케스트레이션 클라이언트 호출하여 사용자 쿼리 사용한 구인공고 처리하여 디비에 생성할 entity를 구성한다.
+        let [chatReq, chatResponse] = await AIHelper.orchestrateChatCreation(user_query);
+        return `Question: ${chatReq}, response context: ${chatResponse}`;
+      });
 }
 
 const wrongInputError = 'Required input parameters not supplied';

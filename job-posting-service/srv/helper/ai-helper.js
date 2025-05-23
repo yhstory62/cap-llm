@@ -124,4 +124,70 @@ async function orchestrateJobPostingCreation(user_query) {
     }
 }
 
-export { createVectorEmbeddings, orchestrateJobPostingCreation};
+async function orchestrateChatCreation(user_query) {
+    try {
+        // RAG 흐름에 대한 전체 로직을 추가
+        const embeddingClient = new AzureOpenAiEmbeddingClient({
+            modelName: embeddingModelName,
+            maxRetries: 0,
+            resourceGroup: resourceGroup
+        });
+
+        // AZURE의 컨텐츠 안전성 필터 - ALLOW_SAFE : 안전한 컨텐츠만 사용
+        const filter = buildAzureContentSafetyFilter({
+            Hate: 'ALLOW_SAFE',         // 혐오 발언
+            Violence: 'ALLOW_SAFE',     // 폭력성
+            SelfHarm: 'ALLOW_SAFE',     // 자해/자살 관련
+            Sexual: 'ALLOW_SAFE',       // 성적인 내용
+        });
+
+        // 준비된 관련 정보들을 활용하여 LLM, 템플릿, 필터를 전달하여 오케스트레이션 클라이언트를 생성
+        const orchestrationClient = new OrchestrationClient(
+            {
+            llm: {
+                model_name: chatModelName,
+                model_params: { max_tokens: 1000, temperature: 0.1 },
+            },
+            templating: {
+                template: [
+                {
+                    role: 'system',
+                    content: `You are an AI assistant that acts as both a conversational chatbot and a job posting generator for HR recruiters and managers. 
+                     You receive user queries for general conversation as well as requests to create job postings for new hires.  
+                     When generating job postings, always consider the provided context and include relevant company information such as pay range, employee benefits, and job requirements.  
+                     For all interactions, be helpful, concise, and context-aware.  
+                     Always consider all input and conversation history before responding.`,
+                },
+                {
+                    role: 'user',
+                    content: `Question: {{?question}}`,
+                },
+                ],
+            },
+            filtering: {
+                input: {
+                filters: [filter],
+                },
+                output: {
+                filters: [filter],
+                },
+            }
+            },
+            { resourceGroup: resourceGroup }
+        );
+
+        const response = await orchestrationClient.chatCompletion({
+            inputParams: {
+                question: user_query
+            }
+        });
+        console.log(`Successfully executed chat completion. ${response.getContent()}`);
+        return [user_query, response.getContent()];
+
+      } catch (error) {
+        console.log(`Error while generating Job Posting. Error: ${error.response}`  );
+        throw error;
+    }
+}
+
+export { createVectorEmbeddings, orchestrateJobPostingCreation, orchestrateChatCreation};

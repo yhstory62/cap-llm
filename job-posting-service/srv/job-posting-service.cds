@@ -18,4 +18,6 @@ service JobPostingService {
     // 구인공고 삭제 (개별 삭제/전체 삭제)
     function deleteJobPosting(id : String)          returns String;
     function deleteJobPostings()                    returns String;
+
+    function createChat(user_query : String)        returns String;
 }
