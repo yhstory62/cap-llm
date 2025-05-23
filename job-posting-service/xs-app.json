@@ -1,0 +1,9 @@
+{
+    "routes": [
+      {
+        "source": "^/ai-token$",
+        "target": "/ai-token",
+        "authenticationType": "none"
+      }
+    ]
+  }
